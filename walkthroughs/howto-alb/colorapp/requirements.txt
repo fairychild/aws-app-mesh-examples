@@ -1,0 +1,4 @@
+flask
+aws-xray-sdk
+urllib3<2
+gunicorn==22.0.0

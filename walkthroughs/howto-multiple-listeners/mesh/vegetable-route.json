@@ -1,0 +1,18 @@
+{
+    "spec": {
+        "httpRoute": {
+            "action": {
+                "weightedTargets": [
+                    {
+                        "virtualNode": "foodteller-vn",
+                        "weight": 1,
+                        "port": 6666
+                    }
+                ]
+            },
+            "match": {
+                "port": 4444
+            }
+        }
+    }
+}

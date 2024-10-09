@@ -1,0 +1,18 @@
+{
+    "spec": {
+        "httpRoute" : {
+            "match" : {
+                "port": 1111,
+                "prefix": "/vegetable"
+            },
+            "action" : {
+                "target" : {
+                    "virtualService": {
+                        "virtualServiceName": $VIRTUALSERVICE_NAME
+                    },
+                    "port": 4444
+                }
+            }
+        }
+    }
+}
