@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	“time"
 
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/pkg/errors"
@@ -196,8 +197,9 @@ func (h *tcpEchoHandler) ServeHTTP(writer http.ResponseWriter, request *http.Req
 type pingHandler struct{}
 
 func (h *pingHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	log.Println("ping requested, reponding with HTTP 200")
-	writer.WriteHeader(http.StatusOK)
+	log.Println("调用接口成功，这是延迟5秒后的返回")
+	time.Sleep(time.Second * 5)
+	fmt.Fprintf(writer, "调用接口成功，这是延迟5秒后的返回")
 }
 
 func main() {
