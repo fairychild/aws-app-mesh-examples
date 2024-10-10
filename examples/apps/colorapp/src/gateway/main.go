@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 	"sync"
-	“time"
+	"time"
 
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/pkg/errors"
