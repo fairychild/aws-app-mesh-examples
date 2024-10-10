@@ -1,7 +1,3 @@
-FROM maven:3.3.9-jdk-8-alpine AS test
-USER root
-RUN mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
-
 FROM docker.io/openjdk:21
 EXPOSE 2701
 WORKDIR /
