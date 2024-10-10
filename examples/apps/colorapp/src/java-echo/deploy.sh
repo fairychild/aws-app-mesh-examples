@@ -28,6 +28,7 @@ describe_create_ecr_registry() {
 }
 
 # build
+mvn clean package -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 docker build -t $COLOR_JAVAECHO_IMAGE ${DIR}
 
 # push
