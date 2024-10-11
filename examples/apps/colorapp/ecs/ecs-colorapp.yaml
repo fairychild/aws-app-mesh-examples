@@ -332,7 +332,7 @@ Resources:
     Properties:
       ContainerDefinitions:
         - Name: "app"
-          Image: "cjimti/go-echo"
+          Image: ${JavaEchoImage}
           Essential: true
           LogConfiguration:
             LogDriver: "awslogs"

@@ -20,6 +20,7 @@ aws --profile "${AWS_PROFILE}" --region "${AWS_DEFAULT_REGION}" \
     EnvironmentName="${ENVIRONMENT_NAME}" \
     ECSServicesDomain="${SERVICES_DOMAIN}" \
     AppMeshMeshName="${MESH_NAME}" \
+    JavaEchoImage="${COLOR_JAVAECHO_IMAGE}" \
     ColorGatewayTaskDefinition="${colorgateway_task_def_arn}" \
     ColorTellerWhiteTaskDefinition="${colorteller_white_task_def_arn}" \
     ColorTellerRedTaskDefinition="${colorteller_red_task_def_arn}" \
