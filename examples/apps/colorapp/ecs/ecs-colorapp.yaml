@@ -332,7 +332,7 @@ Resources:
     Properties:
       ContainerDefinitions:
         - Name: "app"
-          Image: "${JavaEchoImage}"
+          Image: !Sub "${JavaEchoImage}"
           Essential: true
           LogConfiguration:
             LogDriver: "awslogs"
