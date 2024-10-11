@@ -167,31 +167,54 @@ func (h *tcpEchoHandler) ServeHTTP(writer http.ResponseWriter, request *http.Req
 	}
 
 	log.Printf("Dialing tcp endpoint %s", endpoint)
-	conn, err := net.Dial("tcp", endpoint)
+	// conn, err := net.Dial("tcp", endpoint)
+	// if err != nil {
+	// 	writer.WriteHeader(http.StatusInternalServerError)
+	// 	fmt.Fprintf(writer, "Dial failed, err:%s", err.Error())
+	// 	return
+	// }
+	// defer conn.Close()
+
+	// strEcho := "Hello from gateway"
+	// log.Printf("Writing '%s'", strEcho)
+	// _, err = fmt.Fprintf(conn, strEcho)
+	// if err != nil {
+	// 	writer.WriteHeader(http.StatusInternalServerError)
+	// 	fmt.Fprintf(writer, "Write to server failed, err:%s", err.Error())
+	// 	return
+	// }
+
+	// reply, err := bufio.NewReader(conn).ReadString('\n')
+	// if err != nil {
+	// 	writer.WriteHeader(http.StatusInternalServerError)
+	// 	fmt.Fprintf(writer, "Read from server failed, err:%s", err.Error())
+	// 	return
+	// }
+
+	// fmt.Fprintf(writer, "Response from tcpecho server: %s", reply)
+
+	client := xray.Client(&http.Client{})
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://%s", endpoint), nil)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(writer, "Dial failed, err:%s", err.Error())
 		return
 	}
-	defer conn.Close()
 
-	strEcho := "Hello from gateway"
-	log.Printf("Writing '%s'", strEcho)
-	_, err = fmt.Fprintf(conn, strEcho)
+	resp, err := client.Do(req.WithContext(request.Context()))
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(writer, "Write to server failed, err:%s", err.Error())
 		return
 	}
 
-	reply, err := bufio.NewReader(conn).ReadString('\n')
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(writer, "Read from server failed, err:%s", err.Error())
 		return
 	}
 
-	fmt.Fprintf(writer, "Response from tcpecho server: %s", reply)
+	echoResult := strings.TrimSpace(string(body))
+	if len(echoResult) < 1 {
+		return
+	}
+	fmt.Fprintf(writer, "Response from tcpecho server: %s", echoResult)
 }
 
 type pingHandler struct{}
