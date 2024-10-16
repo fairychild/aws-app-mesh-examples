@@ -59,7 +59,7 @@ func (h *colorHandler) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	color, err := getColorFromColorTeller(request)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
-		log.Println("info from colorteller is:"+err.Error())
+		log.Println("info from colorteller is:" + err.Error())
 		log.Println("500 - UNexpected Error")
 		writer.Write([]byte("500 - Unexpected Error"))
 		return
@@ -228,6 +228,12 @@ func (h *pingHandler) ServeHTTP(writer http.ResponseWriter, request *http.Reques
 	fmt.Fprintf(writer, "调用接口成功，这是延迟5秒后的返回")
 }
 
+type retryHandler struct{}
+
+func (h *retryHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+
+}
+
 func main() {
 	log.Println("Starting server, listening on port " + getServerPort())
 
@@ -249,5 +255,6 @@ func main() {
 	http.Handle("/color/clear", xray.Handler(xraySegmentNamer, &clearColorStatsHandler{}))
 	http.Handle("/tcpecho", xray.Handler(xraySegmentNamer, &tcpEchoHandler{}))
 	http.Handle("/ping", xray.Handler(xraySegmentNamer, &pingHandler{}))
+	http.Handle("/retry", xray.Handler(xraySegmentNamer, &retryHandler{}))
 	log.Fatal(http.ListenAndServe(":"+getServerPort(), nil))
 }
