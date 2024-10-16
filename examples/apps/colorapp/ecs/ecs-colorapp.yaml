@@ -4,6 +4,10 @@ Parameters:
     Type: String
     Description: Environment name that joins all the stacks
 
+  JavaEchoImage:
+    Type: String
+    Description: tcpecho destination in ecr
+
   AppMeshMeshName:
     Type: String
     Description: Name of mesh
@@ -332,7 +336,7 @@ Resources:
     Properties:
       ContainerDefinitions:
         - Name: "app"
-          Image: !Sub "${JavaEchoImage}"
+          Image: "014498656594.dkr.ecr.ap-southeast-1.amazonaws.com/java-echo:latest"
           Essential: true
           LogConfiguration:
             LogDriver: "awslogs"
