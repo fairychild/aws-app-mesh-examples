@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"math"
-	"math/rand"
 
 	// "net"
 	"net/http"
@@ -232,15 +231,30 @@ func (h *pingHandler) ServeHTTP(writer http.ResponseWriter, request *http.Reques
 type retryHandler struct{}
 
 func (h *retryHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	a := rand.Intn(100)
-	if a < 50 {
-		writer.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(writer, "调用接口失败，这是随机返回失败")
+
+	colorTellerEndpoint, err := getColorTellerEndpoint()
+	if err != nil {
+		return
+	}
+	client := xray.Client(&http.Client{})
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://%s/retryTest", colorTellerEndpoint), nil)
+	if err != nil {
 		return
 	}
 
-	// ���用接口成功，这是��机返回成功
-	fmt.Fprintf(writer, "调用接口成功，这是随机返回成功")
+	resp, err := client.Do(req.WithContext(request.Context()))
+	if err != nil {
+		return
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	writer.WriteHeader(resp.StatusCode)
+	echoResult := strings.TrimSpace(string(body))
+	fmt.Fprintf(writer, " %s", echoResult)
 
 }
 
@@ -268,3 +282,4 @@ func main() {
 	http.Handle("/retry", xray.Handler(xraySegmentNamer, &retryHandler{}))
 	log.Fatal(http.ListenAndServe(":"+getServerPort(), nil))
 }
+
