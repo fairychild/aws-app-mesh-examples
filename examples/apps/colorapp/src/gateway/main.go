@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math"
+	"math/rand"
 
 	// "net"
 	"net/http"
@@ -231,6 +232,15 @@ func (h *pingHandler) ServeHTTP(writer http.ResponseWriter, request *http.Reques
 type retryHandler struct{}
 
 func (h *retryHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	a := rand.Intn(100)
+	if a < 50 {
+		writer.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(writer, "调用接口失败，这是随机返回失败")
+		return
+	}
+
+	// ���用接口成功，这是��机返回成功
+	fmt.Fprintf(writer, "调用接口成功，这是随机返回成功")
 
 }
 
