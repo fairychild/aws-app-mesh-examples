@@ -59,7 +59,7 @@ func (h *colorHandler) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	color, err := getColorFromColorTeller(request)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
-		log.Println(err)
+		log.Println("info from colorteller is:"+err.Error())
 		log.Println("500 - UNexpected Error")
 		writer.Write([]byte("500 - Unexpected Error"))
 		return
@@ -145,7 +145,7 @@ func getColorFromColorTeller(request *http.Request) (string, error) {
 
 	color := strings.TrimSpace(string(body))
 	if len(color) < 1 {
-		return "-n/a-", errors.New("Empty response from colorTeller")
+		return "-n/a-", errors.New("Empty response from colorTeller" + ",the color is: " + string(body))
 	}
 
 	return color, nil
